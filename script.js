@@ -105,9 +105,10 @@ function generateCards() {
     // console.log(cards);
 
     for (let i = 0; i < totalCards / 2; i++) { 
-      const tech = CARD_TECHS[i % CARD_TECHS.length];
+      const datatech = CARD_TECHS[i % CARD_TECHS.length];
       const node = document.createElement('div');
-      node.classList.add('card', tech);
+      node.classList.add('card', datatech);
+      node.dataset.tech = datatech; //dom element's data store in dataset.The 'Dataset' (HTMLElement. dataset property) allows you to easily set or get the values of custom '-data' prefixed HTML attributes on your elements. 
 
       const cardFront = document.createElement('div');
       node.appendChild(cardFront);
@@ -151,7 +152,7 @@ function handleCardFlip() {
   }
   // if the above two special cases do not exist, so add card--flipped class to the clicked card's classlist to make it get flipped, then check whether there is a card flipped on board (case 3 and case 4)
   this.classList.add('card--flipped');
-  // case3: if there is no card which has been flipped on the boarc, that means the card you just clicked and flipped is the first card.
+  // case3: if there is no card which has been flipped on the board, that means the card you just clicked and flipped is the first card.
   if (!game.hasCardFlipped) {
     game.firstCard = this;
     game.hasCardFlipped = true;
@@ -165,7 +166,8 @@ function handleCardFlip() {
 // 3.3.2 checking whether the second card matches the first one
 function checkMatching() {
   // case1: if matches, update the score and the total number of matched cards
-  if (game.firstCard.classList[1] === game.secondCard.classList[1]) {
+  // if (game.firstCard.classList[1] === game.secondCard.classList[1]) {
+  if (game.firstCard.dataset.tech === game.secondCard.dataset.tech) {
     updateScore();
     game.matchedCards += 2;
     unBindCardClick();
@@ -225,8 +227,10 @@ function handleGameOver() {
 
 //for code cleanliness
 function resetBoard() {
-  [game.firstCard, game.secondCard] = [null, null];
-  [game.lockBoard, game.hasCardFlipped] = [false, false];
+  game.firstCard = null;
+  game.secondCard = null;
+  game.lockBoard = false;
+  game.hasCardFlipped = false;
 }
 //for code cleanliness
 function stopTimer() {
